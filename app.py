@@ -11,10 +11,24 @@ class Promotions(QtWidgets.QWidget):
 
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
+        self.setAutoFillBackground(True)
+        p = self.palette()
+        p.setColor(self.backgroundRole(), QtGui.QColor(102, 185, 51))
+        self.setPalette(p)
+        
         self.setWindowTitle('Promotions')
-        self.resize(350, 560)
+        self.resize(350, 580)
 
         layout = QtWidgets.QGridLayout()
+
+        heading = QtGui.QFont()
+        heading.setBold(True)
+        heading.setPointSize(20)
+        detailsHead = QtWidgets.QLabel("Promotions")
+        detailsHead.setAlignment(QtCore.Qt.AlignCenter)
+        detailsHead.setFont(heading)
+
+        layout.addWidget(detailsHead)
 
         events = [('Sephora BUY 2 GET 25%', 2),('Starbucks FREE DRINK with \nevery purchase', 2),
         ('Swensons 3 mains for price of 2', 3), ('Mcdonalds 25% off family meal', 4)]
@@ -28,6 +42,10 @@ class Promotions(QtWidgets.QWidget):
             frame.setFrameShape(0x3)
             frame.setFrameShadow(0x30)
             frame.setMaximumSize(350, 180)
+            frame.setAutoFillBackground(True)
+            p = frame.palette()
+            p.setColor(frame.backgroundRole(), QtCore.Qt.white)
+            frame.setPalette(p)
             frameLayout = QtWidgets.QGridLayout()
             self.labelA = QtWidgets.QLabel(name)
             self.labelA.setAlignment(QtCore.Qt.AlignCenter)
@@ -49,13 +67,26 @@ class WindowTwo(QtWidgets.QWidget):
 
     def __init__(self, no):
         QtWidgets.QWidget.__init__(self)
+        self.setAutoFillBackground(True)
+        p = self.palette()
+        p.setColor(self.backgroundRole(), QtGui.QColor(102, 185, 51))
+        self.setPalette(p)
 
         matches = match.find_match(profiles, no-1)
         
         self.setWindowTitle('We found you a match!')
-        self.resize(350, 560)
+        self.resize(350, 580)
  
         layout = QtWidgets.QGridLayout()
+
+        heading = QtGui.QFont()
+        heading.setBold(True)
+        heading.setPointSize(20)
+        detailsHead = QtWidgets.QLabel("We found you a match!")
+        detailsHead.setAlignment(QtCore.Qt.AlignCenter)
+        detailsHead.setFont(heading)
+
+        layout.addWidget(detailsHead)
 
         for i in range(1, no):
             cur = matches[i]
@@ -63,6 +94,10 @@ class WindowTwo(QtWidgets.QWidget):
             frame.setFrameShape(0x3)
             frame.setFrameShadow(0x30)
             frame.setMaximumSize(350, 150)
+            frame.setAutoFillBackground(True)
+            p = frame.palette()
+            p.setColor(frame.backgroundRole(), QtCore.Qt.white)
+            frame.setPalette(p)
             frameLayout = QtWidgets.QGridLayout()
 
             bold = QtGui.QFont()
@@ -99,14 +134,32 @@ class Profile(QtWidgets.QWidget):
 
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
+        self.setAutoFillBackground(True)
+        p = self.palette()
+        p.setColor(self.backgroundRole(), QtGui.QColor(102, 185, 51))
+        self.setPalette(p)
+        
         self.setWindowTitle('Profile')
-        self.resize(350, 560)
+        self.resize(350, 580)
 
         layout = QtWidgets.QGridLayout()
+
+        heading = QtGui.QFont()
+        heading.setBold(True)
+        heading.setPointSize(20)
+        detailsHead = QtWidgets.QLabel("Profile")
+        detailsHead.setAlignment(QtCore.Qt.AlignCenter)
+        detailsHead.setFont(heading)
+
+        layout.addWidget(detailsHead)
 
         frame = QtWidgets.QFrame()
         frame.setFrameShape(0x3)
         frame.setFrameShadow(0x30)
+        frame.setAutoFillBackground(True)
+        p = frame.palette()
+        p.setColor(frame.backgroundRole(), QtCore.Qt.white)
+        frame.setPalette(p)
         frameLayout = QtWidgets.QGridLayout()
 
         global profiles

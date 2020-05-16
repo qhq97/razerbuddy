@@ -6,4 +6,4 @@ source env/Scripts/activate
 
 pip install -r requirements.txt
 
-python test.py
+python app.py
