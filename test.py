@@ -1,6 +1,9 @@
 import sys
 from PyQt5 import QtCore, QtWidgets, QtGui
+import dataClean
+import match
 
+profiles = []
 
 class Promotions(QtWidgets.QWidget):
 
@@ -42,7 +45,7 @@ class WindowTwo(QtWidgets.QWidget):
         QtWidgets.QWidget.__init__(self)
         self.setWindowTitle('We found you a match!')
         self.resize(350, 560)
-
+ 
         layout = QtWidgets.QGridLayout()
 
         self.label = QtWidgets.QLabel(text)
@@ -67,20 +70,72 @@ class Profile(QtWidgets.QWidget):
 
         layout = QtWidgets.QGridLayout()
 
-        details = QtWidgets.QLabel('Name: \nAge: \n...')
-        details.setAlignment(QtCore.Qt.AlignCenter)
+        frame = QtWidgets.QFrame()
+        frame.setFrameShape(0x3)
+        frame.setFrameShadow(0x30)
+        frameLayout = QtWidgets.QGridLayout()
+
+        profiles = dataClean.get_profiles()
+        user = profiles[0]
+        userDetails = 'Name: ' + str(user[0]) + '\nAge: ' + str(user[1]) + '\nLanguage: ' + str(user[2]) + '\nTotal Spending: ' + str(user[3])
+        userFinDetails = ''
+        for key, value in user[4].items():
+            userFinDetails += key.capitalize() + ': ' + str(value) + '\n'
+
+        
+        detailsA = QtWidgets.QLabel(userDetails)
+        detailsA.setAlignment(QtCore.Qt.AlignCenter)
+
+        bold = QtGui.QFont()
+        bold.setBold(True)
+        detailsB = QtWidgets.QLabel('\nFinancial Profile')
+        detailsB.setAlignment(QtCore.Qt.AlignCenter)
+        detailsB.setFont(bold)
+
+        detailsC = QtWidgets.QLabel(userFinDetails)
+        detailsC.setAlignment(QtCore.Qt.AlignCenter)
         
         self.button = QtWidgets.QPushButton('See Promo')
         self.button.clicked.connect(self.profile)
 
-        layout.addWidget(details)
+        layout.addWidget(Label("profilepic.jpg"))
+        layout.addWidget(frame)
+        frameLayout.addWidget(detailsA)
+        frameLayout.addWidget(detailsB)
+        frameLayout.addWidget(detailsC)
         layout.addWidget(self.button)
 
+        frame.setLayout(frameLayout)
         self.setLayout(layout)
 
     def profile(self):
         self.switch_window.emit()
 
+class Label(QtWidgets.QLabel):
+    def __init__(self, *args, antialiasing=True, **kwargs):
+        super(Label, self).__init__(*args, **kwargs)
+        self.Antialiasing = antialiasing
+        self.setMaximumSize(200, 200)
+        self.setMinimumSize(200, 200)
+        self.radius = 100 
+
+        self.target = QtGui.QPixmap(self.size())  
+        self.target.fill(QtCore.Qt.transparent)   
+
+        p = QtGui.QPixmap(args[0]).scaled(200, 200, QtCore.Qt.KeepAspectRatioByExpanding, QtCore.Qt.SmoothTransformation)
+
+        painter = QtGui.QPainter(self.target)
+        if self.Antialiasing:
+            painter.setRenderHint(QtGui.QPainter.Antialiasing, True)
+            painter.setRenderHint(QtGui.QPainter.HighQualityAntialiasing, True)
+            painter.setRenderHint(QtGui.QPainter.SmoothPixmapTransform, True)
+
+        path = QtGui.QPainterPath()
+        path.addRoundedRect(0, 0, self.width(), self.height(), self.radius, self.radius)
+
+        painter.setClipPath(path)
+        painter.drawPixmap(0, 0, p)
+        self.setPixmap(self.target)
 
 class Controller:
 
