@@ -1,5 +1,5 @@
 import sys
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtCore, QtWidgets, QtGui
 
 
 class Promotions(QtWidgets.QWidget):
@@ -13,12 +13,17 @@ class Promotions(QtWidgets.QWidget):
 
         layout = QtWidgets.QGridLayout()
 
-        self.line_edit = QtWidgets.QLineEdit()
-        layout.addWidget(self.line_edit)
+        self.line_edit = QtWidgets.QLineEdit() # Redundant function
+#        layout.addWidget(self.line_edit)
 
+        self.label = QtWidgets.QLabel('Event 1')
+        self.label.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.button = QtWidgets.QPushButton('Interested')
-        self.button.clicked.connect(self.switch)
+
+        layout.addWidget(self.label)
         layout.addWidget(self.button)
+
+        self.button.clicked.connect(self.switch)
 
         self.setLayout(layout)
 
