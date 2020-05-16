@@ -1,7 +1,5 @@
 import sys
 from PyQt5 import QtCore, QtWidgets, QtGui
-from PyQt5.QtWidgets import (QMainWindow, QWidget, QVBoxLayout, 
-                             QApplication, QPushButton, QLabel)
 
 
 class Promotions(QtWidgets.QWidget):
@@ -13,24 +11,24 @@ class Promotions(QtWidgets.QWidget):
         self.setWindowTitle('Promotions')
         self.resize(350, 560)
 
-        layout = QVBoxLayout()
+        layout = QtWidgets.QGridLayout()
 
         self.line_edit = QtWidgets.QLineEdit() # Redundant function
-#       layout.addWidget(self.line_edit)
+#        layout.addWidget(self.line_edit)
 
-        self.label = QtWidgets.QLabel('Event 1')
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.button = QtWidgets.QPushButton('Interested')
-        self.label2 = QtWidgets.QLabel('Event 2')
-        self.label2.setAlignment(QtCore.Qt.AlignCenter)
-        self.button = QtWidgets.QPushButton('Interested')
-
-        layout.addWidget(self.label)
-        layout.addWidget(self.button)
-        layout.addWidget(self.label2)
-        layout.addWidget(self.button)
-
-        self.button.clicked.connect(self.switch)
+        events = ['Sephora BUY 2 GET 25%','Starbucks FREE DRINK with every purchase',
+        'Event 3', 'Event 4', 'Event 101']
+        
+        font = QtGui.QFont()
+        font.setPointSize(11)
+        for x in events:
+            self.label = QtWidgets.QLabel(x)
+            self.label.setAlignment(QtCore.Qt.AlignCenter)
+            self.label.setFont(font)
+            self.button = QtWidgets.QPushButton('Interested')
+            self.button.clicked.connect(self.switch)
+            layout.addWidget(self.label)
+            layout.addWidget(self.button)
 
         self.setLayout(layout)
 
