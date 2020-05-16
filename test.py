@@ -7,7 +7,7 @@ profiles = []
 
 class Promotions(QtWidgets.QWidget):
 
-    switch_window = QtCore.pyqtSignal(str)
+    switch_window = QtCore.pyqtSignal()
 
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
@@ -15,9 +15,6 @@ class Promotions(QtWidgets.QWidget):
         self.resize(350, 560)
 
         layout = QtWidgets.QGridLayout()
-
-        self.line_edit = QtWidgets.QLineEdit() # Redundant function
-#        layout.addWidget(self.line_edit)
 
         events = ['Sephora BUY 2 GET 25%','Starbucks FREE DRINK with every purchase',
         'Event 3', 'Event 4', 'Event 101']
@@ -36,26 +33,46 @@ class Promotions(QtWidgets.QWidget):
         self.setLayout(layout)
 
     def switch(self):
-        self.switch_window.emit(self.line_edit.text())
+        self.switch_window.emit()
 
 
 class WindowTwo(QtWidgets.QWidget):
 
-    def __init__(self, text):
+    def __init__(self):
         QtWidgets.QWidget.__init__(self)
+
+        matches = match.find_match(profiles, 1)[1]
+        
         self.setWindowTitle('We found you a match!')
         self.resize(350, 560)
  
         layout = QtWidgets.QGridLayout()
 
-        self.label = QtWidgets.QLabel(text)
-        layout.addWidget(self.label)
+        frame = QtWidgets.QFrame()
+        frame.setFrameShape(0x3)
+        frame.setFrameShadow(0x30)
+        frame.setMaximumSize(200, 150)
+        frameLayout = QtWidgets.QGridLayout()
+
+        bold = QtGui.QFont()
+        bold.setBold(True)
+        label = QtWidgets.QLabel('Matched With: \n')
+        label.setAlignment(QtCore.Qt.AlignCenter)
+        label.setFont(bold)
+
+        matchLabel = QtWidgets.QLabel('Name: ' + str(matches[0]) + '\nAge: ' + str(matches[1]) + '\nLanguage: ' + str(matches[2]))
+        matchLabel.setAlignment(QtCore.Qt.AlignCenter)
 
         self.button = QtWidgets.QPushButton('Close')
         self.button.clicked.connect(self.close)
 
+        layout.addWidget(Label("profilepic2.jpg"))
+        layout.addWidget(frame)
+        frameLayout.addWidget(label)
+        frameLayout.addWidget(matchLabel)
         layout.addWidget(self.button)
 
+        frame.setLayout(frameLayout)
         self.setLayout(layout)
 
 
@@ -75,12 +92,14 @@ class Profile(QtWidgets.QWidget):
         frame.setFrameShadow(0x30)
         frameLayout = QtWidgets.QGridLayout()
 
+        global profiles
         profiles = dataClean.get_profiles()
         user = profiles[0]
         userDetails = 'Name: ' + str(user[0]) + '\nAge: ' + str(user[1]) + '\nLanguage: ' + str(user[2]) + '\nTotal Spending: ' + str(user[3])
         userFinDetails = ''
+        level = ['Low', 'Medium', 'High']
         for key, value in user[4].items():
-            userFinDetails += key.capitalize() + ': ' + str(value) + '\n'
+            userFinDetails += key.capitalize() + ': ' + level[value-1] + '\n'
 
         
         detailsA = QtWidgets.QLabel(userDetails)
@@ -153,8 +172,8 @@ class Controller:
         self.profile.close()
         self.promo.show()
 
-    def show_window_two(self, text):
-        self.window_two = WindowTwo(text)
+    def show_window_two(self):
+        self.window_two = WindowTwo()
         self.promo.close()
         self.window_two.show()
 
