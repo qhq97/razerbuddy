@@ -1,4 +1,4 @@
-# python_interface
+# Razer Buddy
  
 python -m venv env
 
