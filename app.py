@@ -165,7 +165,7 @@ class Profile(QtWidgets.QWidget):
         global profiles
         profiles = dataClean.get_profiles()
         user = profiles[0]
-        userDetails = 'Name: ' + str(user[0]) + '\nAge: ' + str(user[1]) + '\nLanguage: ' + str(user[2]) + '\nTotal Spending: ' + str(user[3])
+        userDetails = 'Name: ' + str(user[0]) + '\nAge: ' + str(user[1]) + '\nLanguage: ' + str(user[2]) + '\nTotal Spending: $' + str(user[3])
         userFinDetails = ''
         level = ['Low', 'Medium', 'High']
         for key, value in user[4].items():
