@@ -7,7 +7,7 @@ profiles = []
 
 class Promotions(QtWidgets.QWidget):
 
-    switch_window = QtCore.pyqtSignal()
+    switch_window = QtCore.pyqtSignal(int)
 
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
@@ -16,63 +16,80 @@ class Promotions(QtWidgets.QWidget):
 
         layout = QtWidgets.QGridLayout()
 
-        events = ['Sephora BUY 2 GET 25%','Starbucks FREE DRINK with every purchase',
-        'Event 3', 'Event 4', 'Event 101']
+        events = [('Sephora BUY 2 GET 25%', 2),('Starbucks FREE DRINK with \nevery purchase', 2),
+        ('Swensons 3 mains for price of 2', 3), ('Mcdonalds 25% off family meal', 4)]
         
         font = QtGui.QFont()
         font.setPointSize(11)
-        for x in events:
-            self.label = QtWidgets.QLabel(x)
-            self.label.setAlignment(QtCore.Qt.AlignCenter)
-            self.label.setFont(font)
+        fontSmall = QtGui.QFont()
+        fontSmall.setPointSize(8)
+        for name, no in events:
+            frame = QtWidgets.QFrame()
+            frame.setFrameShape(0x3)
+            frame.setFrameShadow(0x30)
+            frame.setMaximumSize(350, 180)
+            frameLayout = QtWidgets.QGridLayout()
+            self.labelA = QtWidgets.QLabel(name)
+            self.labelA.setAlignment(QtCore.Qt.AlignCenter)
+            self.labelA.setFont(font)
+            self.labelB = QtWidgets.QLabel('No of pax: ' + str(no))
+            self.labelB.setFont(fontSmall)
             self.button = QtWidgets.QPushButton('Interested')
-            self.button.clicked.connect(self.switch)
-            layout.addWidget(self.label)
-            layout.addWidget(self.button)
+            self.button.clicked.connect((lambda i:lambda: self.switch_window.emit(i))(no))
+            frameLayout.addWidget(self.labelA)
+            frameLayout.addWidget(self.labelB)
+            frameLayout.addWidget(self.button)
+            frame.setLayout(frameLayout)
+            layout.addWidget(frame)
 
         self.setLayout(layout)
-
-    def switch(self):
-        self.switch_window.emit()
 
 
 class WindowTwo(QtWidgets.QWidget):
 
-    def __init__(self):
+    def __init__(self, no):
         QtWidgets.QWidget.__init__(self)
 
-        matches = match.find_match(profiles, 1)[1]
+        matches = match.find_match(profiles, no-1)
         
         self.setWindowTitle('We found you a match!')
         self.resize(350, 560)
  
         layout = QtWidgets.QGridLayout()
 
+        for i in range(1, no):
+            cur = matches[i]
+            frame = QtWidgets.QFrame()
+            frame.setFrameShape(0x3)
+            frame.setFrameShadow(0x30)
+            frame.setMaximumSize(350, 150)
+            frameLayout = QtWidgets.QGridLayout()
+
+            bold = QtGui.QFont()
+            bold.setBold(True)
+            label = QtWidgets.QLabel('Matched With: \n')
+            label.setAlignment(QtCore.Qt.AlignCenter)
+            label.setFont(bold)
+
+            matchLabel = QtWidgets.QLabel('Name: ' + str(cur[0]) + '\nAge: ' + str(cur[1]) + '\nLanguage: ' + str(cur[2]))
+            matchLabel.setAlignment(QtCore.Qt.AlignCenter)
+            
+            frameLayout.addWidget(label)
+            frameLayout.addWidget(matchLabel)
+            frame.setLayout(frameLayout)
+            layout.addWidget(frame)
+
         frame = QtWidgets.QFrame()
-        frame.setFrameShape(0x3)
-        frame.setFrameShadow(0x30)
-        frame.setMaximumSize(200, 150)
-        frameLayout = QtWidgets.QGridLayout()
-
-        bold = QtGui.QFont()
-        bold.setBold(True)
-        label = QtWidgets.QLabel('Matched With: \n')
-        label.setAlignment(QtCore.Qt.AlignCenter)
-        label.setFont(bold)
-
-        matchLabel = QtWidgets.QLabel('Name: ' + str(matches[0]) + '\nAge: ' + str(matches[1]) + '\nLanguage: ' + str(matches[2]))
-        matchLabel.setAlignment(QtCore.Qt.AlignCenter)
-
-        self.button = QtWidgets.QPushButton('Close')
-        self.button.clicked.connect(self.close)
-
-        layout.addWidget(Label("profilepic2.jpg"))
-        layout.addWidget(frame)
-        frameLayout.addWidget(label)
-        frameLayout.addWidget(matchLabel)
-        layout.addWidget(self.button)
-
+        frame.setMaximumSize(350, 70)
+        frameLayout = QtWidgets.QHBoxLayout()
         frame.setLayout(frameLayout)
+        buttonReject = QtWidgets.QPushButton('Reject')
+        buttonReject.clicked.connect(self.close)
+        buttonChat = QtWidgets.QPushButton('Open Chat')
+        buttonChat.clicked.connect(self.close)
+        frameLayout.addWidget(buttonReject)
+        frameLayout.addWidget(buttonChat)
+        layout.addWidget(frame)
         self.setLayout(layout)
 
 
@@ -172,8 +189,8 @@ class Controller:
         self.profile.close()
         self.promo.show()
 
-    def show_window_two(self):
-        self.window_two = WindowTwo()
+    def show_window_two(self, no):
+        self.window_two = WindowTwo(no)
         self.promo.close()
         self.window_two.show()
 
