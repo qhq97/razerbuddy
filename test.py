@@ -2,7 +2,7 @@ import sys
 from PyQt5 import QtCore, QtWidgets
 
 
-class MainWindow(QtWidgets.QWidget):
+class Promotions(QtWidgets.QWidget):
 
     switch_window = QtCore.pyqtSignal(str)
 
@@ -46,7 +46,7 @@ class WindowTwo(QtWidgets.QWidget):
         self.setLayout(layout)
 
 
-class profile(QtWidgets.QWidget):
+class Profile(QtWidgets.QWidget):
 
     switch_window = QtCore.pyqtSignal()
 
@@ -78,19 +78,19 @@ class Controller:
         pass
 
     def show_profile(self):
-        self.profile = profile()
-        self.profile.switch_window.connect(self.show_main)
+        self.profile = Profile()
+        self.profile.switch_window.connect(self.show_promo)
         self.profile.show()
 
-    def show_main(self):
-        self.window = MainWindow()
-        self.window.switch_window.connect(self.show_window_two)
+    def show_promo(self):
+        self.promo = Promotions()
+        self.promo.switch_window.connect(self.show_window_two)
         self.profile.close()
-        self.window.show()
+        self.promo.show()
 
     def show_window_two(self, text):
         self.window_two = WindowTwo(text)
-        self.window.close()
+        self.promo.close()
         self.window_two.show()
 
 
